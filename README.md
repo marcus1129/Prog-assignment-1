@@ -30,3 +30,12 @@ All of the above data must be easily searchable in the database, likely by stuct
 
 
 
+## Program structure
+
+We firstly need a function that can check whether the answer is correct or not, this could be done with a function for each  question type, all contained within a struct through function pointers, these functions would take two arraypointers of 10 numbers each as parameters.
+
+We need an end test function to wrap up and store all the data.
+
+We need a question generation function, that takes the difficulty as a parameter.
+
+User initiation of the quiz will be handled in main, and question in and outputs, will be handled in an interface function.
