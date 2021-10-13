@@ -11,6 +11,7 @@ float correctPercent;
 char opTypeString[20];
 
 int appropriateMathOp(int opType, int a, int b){
+    //Calculates the answer based on the math type
     if(opType == 1){
         return a + b;
     }
@@ -21,7 +22,10 @@ int appropriateMathOp(int opType, int a, int b){
 
 
 void generateNumberSets(int difficulty){
+    //Random seed
     srand(time(0));
+
+    //Generates 2 random sets of numbers based on difficulty
     if(difficulty == 1){
         for(int x = 0; x < questionCount; x++){
             totalNumberSet[0][x] = rand() % 10;
@@ -39,7 +43,11 @@ void generateNumberSets(int difficulty){
 int interface(int opType, int difficulty, int *arrayOfAnswers){
     generateNumberSets(difficulty);
     char str[4];
+
+    //Clears command prompt
     system("cls");
+
+    //Prints every question and evaluates the users answer
     for(int i = 0; i < questionCount; i++){
         strcpy(str, "");
         if(opType == 1){
@@ -53,6 +61,7 @@ int interface(int opType, int difficulty, int *arrayOfAnswers){
             break;
         }
         gets(str);
+        //Evaluates if user's input is correct
         if(atoi(str) == appropriateMathOp(opType, totalNumberSet[0][i], totalNumberSet[1][i])){
             printf("Correct \n\n");
             arrayOfAnswers[i] = 1;
@@ -67,6 +76,7 @@ int interface(int opType, int difficulty, int *arrayOfAnswers){
 int getOpType(){
     char str[1];
     printf("Choose what type of exercises you want, enter \'1\' for addition, \'2\' for subtraction or \'3\' for seaching the database. \n");
+    //Gets and returns a user input
     gets(str);
     return atoi(str);
 }
@@ -74,18 +84,26 @@ int getOpType(){
 int getDifficulty(){
     char str[1];
     printf("Choose what type of exercises you want, enter \'1\' for 1 digit or \'2\' for 2 digits \n");
+    //Gets and returns a user input
     gets(str);
     return atoi(str);
 }
 
 void endTest(int opType, int difficulty, int *arrayOfAnswers){
+    //Counts how many answers were correct
     for(int i = 0; i < questionCount; i++){
         if(arrayOfAnswers[i] == 0b00000001){
             correctCounter++;
         }
     }
+
+    //Calculates how many answers were incorrect
     inCorrectCounter = (float)questionCount - correctCounter;
+
+    //Calculates what percentage was correct
     correctPercent = (correctCounter/(float)questionCount)*100.0;
+
+    //Creates a string based on math type
     if(opType == 1){
         strcpy(opTypeString, "addition");
     }
@@ -96,30 +114,38 @@ void endTest(int opType, int difficulty, int *arrayOfAnswers){
 }
 
 void writeToDB(int opType, int difficulty, int *arrayOfAnswers, char *filePath){
+    //Opens file
     FILE *fp;
     fp = fopen(filePath, "a");
     int temp = 0;
 
+    //Prints quiz data to the file
     fprintf(fp, "Q{o%d;d%d;a", opType, difficulty);
     for(int x = 0; x < 10; x++){
         temp += arrayOfAnswers[x];
     }
     fprintf(fp, "%d;}", temp);
 
+    //Closes file
     fclose(fp);
 }
 
-void readFromDB(char *filePath2){
+void readFromDB(char *filePath2, int searchType){
+    //Allocates buffer
     char *buffer = calloc(1, sizeof(char[100]));
+
     int totalQuestionCount = 0;
+
+    //Opens file
     FILE *fp2;
     fp2 = fopen(filePath2, "r");
+
     int n = 1000;
     int tempOpType;
     int opType1Counter = 0;
     int opType2Counter = 0;
 
-
+    //Reads from file
     fgets(buffer, n, fp2);
     for(int z = 0; z < 100; z++){
         if(buffer[z] == 'Q'){
@@ -134,11 +160,38 @@ void readFromDB(char *filePath2){
     int allCorrect = 0;
     int fiftyPlus = 0;
     int fiftyTo75 = 0;
+    int requestedOpType;
+    int requestedPercent;
+    int requestTotal = 0;
+    char temp[1];
 
+    //Gets what user wants to search for
+    if(searchType == 1){
+        printf("Enter \'1\' to search for addition quizzes or \'2\' to search for subtraction quizzes: \n");
+        gets(temp);
+        requestedOpType = atoi(temp);
+        printf("Enter the requested percent: \n");
+        gets(temp);
+        requestedPercent = atoi(temp);
+    }
 
+    //Loops through every character in file
     for(int z = 0; z < 100; z++){
+        //If character is an o we have found the opType
         if(buffer[z] == 'o'){
             if(buffer[z+1] == '1'){
+                if(requestedOpType == 1){
+                    if(buffer[z+8] != ';'){
+                        if(requestedPercent <= 100){
+                            requestTotal++;
+                        }
+                    }
+                    else{
+                        if(requestedPercent <= (buffer[z+7]-'0')*10){
+                            requestTotal++;
+                        }
+                    }
+                }
                 opType1Counter++;
                 if(buffer[z+8] != ';'){
                     totalOp1Correct += 10;
@@ -148,6 +201,18 @@ void readFromDB(char *filePath2){
                 }
             }
             if(buffer[z+1] == '2'){
+                if(requestedOpType == 2){
+                    if(buffer[z+8] != ';'){
+                        if(requestedPercent <= 100){
+                            requestTotal++;
+                        }
+                    }
+                    else{
+                        if(requestedPercent <= (buffer[z+7]-'0')*10){
+                            requestTotal++;
+                        }
+                    }
+                }
                 opType2Counter++;
                 if(buffer[z+8] != ';'){
                     totalOp2Correct += 10;
@@ -157,6 +222,7 @@ void readFromDB(char *filePath2){
                 }
             }
         }
+        //If we have found the character a we have found the amount of correct answers
         else if(buffer[z] == 'a'){
             if(buffer[z+1] == '1' && buffer[z+2] == '0'){
                 allCorrect++;
@@ -173,13 +239,18 @@ void readFromDB(char *filePath2){
     int totalOp1Percent = (float)totalOp1Correct/((float)opType1Counter*10.f)*100.f;
     int totalOp2Percent = (float)totalOp2Correct/((float)opType2Counter*10.f)*100.f;
 
-    printf("Total quizzes taken: %d \n", totalQuestionCount);
-    printf("Total addition quizzes taken: %d with a total correct percentage: %d \n", opType1Counter, totalOp1Percent);
-    printf("Total subtraction quizzes taken: %d with a total correct percentage: %d \n", opType2Counter, totalOp2Percent);
-    printf("Total quizzes with more than 50%% correct: %d \n", fiftyPlus);
-    printf("Total quizzes with more than 100%% correct: %d \n", allCorrect);
-    printf("Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
-
+    //Outputs result based on what the user wanted
+    if(searchType == 1){
+        printf("There is %d quiz(zes) that fullfill your requirements. \n", requestTotal);
+    }
+    else if(searchType == 2){
+        printf("Total quizzes taken: %d \n", totalQuestionCount);
+        printf("Total addition quizzes taken: %d with a total correct percentage: %d \n", opType1Counter, totalOp1Percent);
+        printf("Total subtraction quizzes taken: %d with a total correct percentage: %d \n", opType2Counter, totalOp2Percent);
+        printf("Total quizzes with more than 50%% correct: %d \n", fiftyPlus);
+        printf("Total quizzes with 100%% correct: %d \n", allCorrect);
+        printf("Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
+    }
 
     fclose(fp2);
 }
@@ -187,26 +258,30 @@ void readFromDB(char *filePath2){
 size_t main()
 {
     int arrayOfAnswers[questionCount];
-    char filePath[] = "DB.txt";
 
     //Gets what type of question the user wants
     int opType = getOpType();
     
+    //Reads from database
     if(opType == 3){
-        readFromDB("DB.txt");
+        printf("Enter 1 to search for data or 2 to get all data: \n");
+        char tempInput[1];
+        gets(tempInput);
+        //Takes user input and file path to database to find the data the user wants
+        readFromDB("DB.txt", atoi(tempInput));
     }
     else{
         //Gets what difficulty level the user wants
         int difficulty = getDifficulty();
 
-        //Conducts the test
+        //Conducts the test, using the opType, difficulty and an array that will be filled with the users answers
         interface(opType, difficulty, arrayOfAnswers);
 
         //Wraps up data
         endTest(opType, difficulty, arrayOfAnswers);
 
         //Stores data
-        writeToDB(opType, difficulty, arrayOfAnswers, filePath);
+        writeToDB(opType, difficulty, arrayOfAnswers, "DB.txt");
     }
     return 0;
 }
