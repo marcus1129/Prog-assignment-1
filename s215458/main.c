@@ -270,12 +270,13 @@ void readFromDB(char *filePath2, int searchType){
 
 size_t main()
 {
+    //Opgave 1
     int arrayOfAnswers[questionCount];
 
     //Gets what type of question the user wants
     int opType = getOpType();
     
-    //Reads from database
+    //Reads from database(Opgave 2)
     if(opType == 3){
         printf("Enter 1 to search for data or 2 to get all data: \n");
         char tempInput[1];
@@ -283,7 +284,7 @@ size_t main()
         //Takes user input and file path to database to find the data the user wants
         readFromDB("DB.txt", atoi(tempInput));
     }
-    else{
+    else{//(Opgave 1)
         //Gets what difficulty level the user wants
         int difficulty = getDifficulty();
 
