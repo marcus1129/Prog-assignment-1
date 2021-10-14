@@ -245,6 +245,8 @@ void readFromDB(char *filePath2, int searchType){
     //Outputs result based on what the user wanted
     if(searchType == 1){
         printf("There is %d quiz(zes) that fullfill your requirements. \n", requestTotal);
+        fprintf(fp3, "\\\\\n");
+        fprintf(fp3, "Opg 2.6: There is %d quiz(zes) that fullfill your requirements. \n", requestTotal);
     }
     else if(searchType == 2){
         printf("Total quizzes taken: %d \n", totalQuestionCount);
@@ -254,12 +256,12 @@ void readFromDB(char *filePath2, int searchType){
         printf("Total quizzes with 100%% correct: %d \n", allCorrect);
         printf("Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
         fprintf(fp3, "\\\\\n");
-        fprintf(fp3, "Total quizzes taken: %d \n", totalQuestionCount);
-        fprintf(fp3, "Total addition quizzes taken: %d with a total correct percentage: %d \n", opType1Counter, totalOp1Percent);
-        fprintf(fp3, "Total subtraction quizzes taken: %d with a total correct percentage: %d \n", opType2Counter, totalOp2Percent);
-        fprintf(fp3, "Total quizzes with more than 50%% correct: %d \n", fiftyPlus);
-        fprintf(fp3, "Total quizzes with 100%% correct: %d \n", allCorrect);
-        fprintf(fp3, "Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
+        fprintf(fp3, "Opg 2.1: Total quizzes taken: %d \n", totalQuestionCount);
+        fprintf(fp3, "Opg 2.2: Total addition quizzes taken: %d with a total correct percentage: %d \n", opType1Counter, totalOp1Percent);
+        fprintf(fp3, "Opg 2.2: Total subtraction quizzes taken: %d with a total correct percentage: %d \n", opType2Counter, totalOp2Percent);
+        fprintf(fp3, "Opg 2.3: Total quizzes with more than 50%% correct: %d \n", fiftyPlus);
+        fprintf(fp3, "Opg 2.4: Total quizzes with 100%% correct: %d \n", allCorrect);
+        fprintf(fp3, "Opg 2.5: Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
     }
 
     fclose(fp2);
