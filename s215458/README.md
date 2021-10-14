@@ -3,6 +3,12 @@
 
 
 
+## File structure
+
+DB.txt is a file containing data that the program uses, this is not meant for user interaction, logs.txt however contains user readable logs.
+
+
+
 ## Required program functions:
 
 <ul>

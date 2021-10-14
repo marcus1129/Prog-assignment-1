@@ -239,6 +239,9 @@ void readFromDB(char *filePath2, int searchType){
     int totalOp1Percent = (float)totalOp1Correct/((float)opType1Counter*10.f)*100.f;
     int totalOp2Percent = (float)totalOp2Correct/((float)opType2Counter*10.f)*100.f;
 
+    FILE *fp3;
+    fp3 = fopen("logs.txt", "a");
+
     //Outputs result based on what the user wanted
     if(searchType == 1){
         printf("There is %d quiz(zes) that fullfill your requirements. \n", requestTotal);
@@ -250,9 +253,17 @@ void readFromDB(char *filePath2, int searchType){
         printf("Total quizzes with more than 50%% correct: %d \n", fiftyPlus);
         printf("Total quizzes with 100%% correct: %d \n", allCorrect);
         printf("Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
+        fprintf(fp3, "\\\\\n");
+        fprintf(fp3, "Total quizzes taken: %d \n", totalQuestionCount);
+        fprintf(fp3, "Total addition quizzes taken: %d with a total correct percentage: %d \n", opType1Counter, totalOp1Percent);
+        fprintf(fp3, "Total subtraction quizzes taken: %d with a total correct percentage: %d \n", opType2Counter, totalOp2Percent);
+        fprintf(fp3, "Total quizzes with more than 50%% correct: %d \n", fiftyPlus);
+        fprintf(fp3, "Total quizzes with 100%% correct: %d \n", allCorrect);
+        fprintf(fp3, "Total quizzes with 50%% to 75%% correct: %d \n", fiftyTo75);
     }
 
     fclose(fp2);
+    fclose(fp3);
 }
 
 size_t main()

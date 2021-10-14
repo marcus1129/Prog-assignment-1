@@ -1,0 +1,7 @@
+\\
+Total quizzes taken: 5 
+Total addition quizzes taken: 4 with a total correct percentage: 55 
+Total subtraction quizzes taken: 1 with a total correct percentage: 20 
+Total quizzes with more than 50% correct: 1 
+Total quizzes with 100% correct: 1 
+Total quizzes with 50% to 75% correct: 1 
